@@ -212,8 +212,7 @@
 					<thead>
 						<tr>
 							<th>Nombre</th>
-							<th>RNC</th>
-							<th>Cedula</th>
+							<th>RNC/Cedula</th>
 							<th>Tipo Persona</th>
 							<th>Activo</th>
 							<th></th>
@@ -224,7 +223,6 @@
 						<tr th:each="cliente:${clientes}">
 							<td th:text="${cliente.nombre}">Nombre</td>
 							<td th:text="${cliente.rnc != null ? cliente.rnc : 'N/A' }">RNC</td>
-							<td th:text="${cliente.cedula}">Cedula</td>
 							<td th:text="${cliente.tipoPersona}">Tipo Persona</td>
 							<td th:text="${cliente.activo ? 'Sí' : 'No'}">Activo</td>
 							<td>
@@ -268,22 +266,17 @@
 								th:value="${cliente?.nombre}">
 						</div>
 						<div class="form-group">
-							<label for="nombre">RNC:</label>
+							<label for="nombre">RNC/Cedula:</label>
 							<input type="text" class="form-control" id="rnc" name="rnc"
 								th:value="${cliente?.rnc}">
-						</div>
+								
 						<div class="form-group">
-							<label for="nombre">Cantidad:</label>
-							<input type="text" class="form-control" id="cedula" name="cedula"
-								th:value="${cliente?.cedula}">
-						</div>
-						<div class="form-group">
-							<label for="idioma">Tipo Persona:</label>
-							<select class="form-control" id="cliente" name="cliente.">
-								<option th:each="clientes : ${cliente}" th:value="${cliente.cliente_id}"
-									th:text="${cliente.tipoPersona}"></option>
+							 <label for="tipoPersona">Tipo Persona:</label>
+							<select class="form-control" id="tipoPersona" name="tipoPersona">
+							<option th:value="Juridica"	th:text="Juridica"></option>
+								<option th:value="Fisica"	th:text="Fisica"></option>
 							</select>
-						</div>
+							</div>
 						<div class="form-group">
 							<label for="activo">Activo</label>
 							<input type="checkbox" class="form-check-input" id="activo" name="activo">
@@ -317,20 +310,16 @@
 														th:value="${cliente?.nombre}">
 												</div>
 												<div class="form-group">
-													<label for="nombre">RNC:</label>
+													<label for="rnc">RNC/Cedula:</label>
 													<input type="text" class="form-control" id="rnc" name="rnc"
 														th:value="${cliente?.rnc}">
 												</div>
+											
 												<div class="form-group">
-													<label for="nombre">Cedula:</label>
-													<input type="text" class="form-control" id="cedula" name="cedula"
-														th:value="${cliente?.cedula}">
-												</div>
-												<div class="form-group">
-													<label for="idioma">Tipo Persona:</label>
+													<label for="tipoPersona">Tipo Persona:</label>
 													<select class="form-control" id="tipoPersona" name="tipoPersona">
-														<option th:each="clientes : ${cliente}" th:value="${cliente.tipoPersona}"
-															th:text="${categoria.tipoPersona}"></option>
+														<option th:value="Juridica"	th:text="Juridica"></option>
+														<option th:value="Fisica"	th:text="Fisica"></option>
 													</select>
 												</div>
 												<div class="form-group">
@@ -355,31 +344,29 @@
 	<!-- Template Main JS File -->
 	<script src="assets/js/main.js"></script>
 	<script>
-		
-
-		document.addEventListener('DOMContentLoaded', function () {
-			var editArticulosModal = document.getElementById('editArticulosModal');
-			if (editArticulosModal) {
-				editArticulosModal.addEventListener('show.bs.modal', function (event) {
-					var button = event.relatedTarget; // Button that triggered the modal
-					var articuloId = button.getAttribute('data-id'); // Extract the ID from data-id attribute
-
-					document.getElementById('articuloId').value = articuloId;
-				});
-			}
-		});
-
+				
 		document.addEventListener('DOMContentLoaded', function () {
 			document.querySelectorAll('.editButton').forEach(button => {
 				button.addEventListener('click', function () {
-					const cienciaId = this.getAttribute('data-id');
+					const clienteId = this.getAttribute('data-id');
 					const row = this.closest('tr');
-					const descripcion = row.children[0].innerText;
-					const activo = row.children[2].innerText === 'Sí';
+					const nombre = row.children[0].innerText;
+					const rnc = row.children[1].innerText;
+					const tipoPersona = row.children[2].innerText;
+					const activo = row.children[3].innerText === 'Sí';
+					document.getElementById('clienteId').value = clienteId;
+					document.getElementById('nombre').value = nombre;
+					document.getElementById('rnc').value = rnc;
+					document.getElementById('tipoPersona').value = tipoPersona;
+					document.getElementById('activo').checked = activo;
+					const tipoPersonaSelect = document.getElementById('tipoPersona');
+					const optionToSelect = Array.from(tipoPersonaSelect.options).find(
+					         option => option.value === tipoPersonaSelect.value);
+							if (optionToSelect) {
+							 optionToSelect.selected = true;
+							}	
+												
 
-					// Rellenar el formulario del modal
-					document.getElementById('cienciaId').value = cienciaId;
-					document.getElementById('descripcion').value = descripcion;
 
 				});
 			});
