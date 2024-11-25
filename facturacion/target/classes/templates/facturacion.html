@@ -214,7 +214,7 @@
 						</thead>
 						<tbody>
 							<tr th:each="factura:${facturaciones}">
-								<td th:text="${factura.id}"><a href=""></td>
+								<a href=""><td th:text="${factura.id}"></td></a>
 								<td th:text="${factura.fecha}">Fecha</td>
 								<td th:text="${factura.articulo.descripcion}">Articulo</td>
 								<td th:text="${factura.cantidad}">Cantidad</td>
