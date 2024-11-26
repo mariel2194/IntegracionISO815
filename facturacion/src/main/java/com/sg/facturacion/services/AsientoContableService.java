@@ -59,7 +59,7 @@ public class AsientoContableService {
         AsientoContable existingAsientoContable = asientoContableRepository.findById(asientoContable.getId()).orElse(null);
         if (existingAsientoContable != null) {
             existingAsientoContable.setDescripcion(asientoContable.getDescripcion());
-            existingAsientoContable.setCuenta(asientoContable.getCuenta());
+            existingAsientoContable.setCuentadb(asientoContable.getCuentadb());
             existingAsientoContable.setTipoMovimiento(asientoContable.getTipoMovimiento());
             existingAsientoContable.setFecha(asientoContable.getFecha());
             existingAsientoContable.setMonto(asientoContable.getMonto());

@@ -25,10 +25,10 @@ public class AsientoContableSoapClient {
         String requestXml = "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <soap:Body>\n" +
                 "    <RegistrarAsiento xmlns=\"http://tempuri.org/\">\n" +
-                "      <idAuxiliar>3</idAuxiliar>\n" +  // ID Auxiliar que mencionas
+                "      <idAuxiliar>3</idAuxiliar>\n" + 
                 "      <descripcion>" + asientoContable.getDescripcion() + "</descripcion>\n" +
-                "      <cuentaDB>" + asientoContable.getCuenta() + "</cuentaDB>\n" +
-                "      <cuentaCR>" + asientoContable.getCuenta() + "</cuentaCR>\n" +
+                "      <cuentaDB>" + asientoContable.getCuentadb() + "</cuentaDB>\n" +
+                "      <cuentaCR>" + asientoContable.getCuentacr() + "</cuentaCR>\n" +
                 "      <monto>" + asientoContable.getMonto() + "</monto>\n" +
                 "    </RegistrarAsiento>\n" +
                 "  </soap:Body>\n" +

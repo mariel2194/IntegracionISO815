@@ -64,7 +64,7 @@ public class Facturacion {
 	private String comentario;
 	
     @Column(name = "Monto_Total")
-	private int montoTotal;
+	private double montoTotal;
 
 	@OneToOne(mappedBy = "factura", cascade = CascadeType.ALL)
 	private Devoluciones devolucion;
@@ -144,12 +144,12 @@ public class Facturacion {
 	}
 
 
-	public int getMontoTotal() {
+	public double getMontoTotal() {
 		return montoTotal;
 	}
 
 
-	public void setMontoTotal(int montoTotal) {
+	public void setMontoTotal(double montoTotal) {
 		this.montoTotal = montoTotal;
 	}
 

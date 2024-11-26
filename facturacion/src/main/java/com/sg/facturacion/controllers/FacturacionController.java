@@ -137,13 +137,12 @@ public class FacturacionController {
                 return "error";
             }
 
-            // Lógica para generar el asiento contable...
-            // (aquí agregarías más detalles de logs según sea necesario)
+            //generar el asiento contable...
             logger.debug("Generando asiento contable para la factura con ID: {}", id);
             AsientoContable asientoContable = new AsientoContable();
             asientoContable.setDescripcion("Asiento generado para la factura ID: " + factura.getId());
             asientoContable.setMonto(factura.getMontoTotal());
-            asientoContable.setCuenta((int)factura.getMontoTotal());
+            asientoContable.setCuentadb((int)factura.getMontoTotal());
             asientoContable.setTipoMovimiento("DEBITO");
             asientoContable.setFecha(factura.getFecha());
 

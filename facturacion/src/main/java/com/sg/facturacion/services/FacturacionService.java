@@ -54,11 +54,9 @@ public class FacturacionService {
 
         asientoContable.setDescripcion("Asiento generado para la factura #" + factura.getId());
         asientoContable.setMonto(factura.getMontoTotal());
-        asientoContable.setCuenta(factura.getMontoTotal());         
-        asientoContable.setTipoMovimiento("DEBITO"); // Para facturas, solo es débito
+        asientoContable.setCuentadb((int)factura.getMontoTotal());         
+        asientoContable.setTipoMovimiento("DEBITO"); 
         asientoContable.setFecha(new Date());
-
-        // Guardar el asiento en la base de datos
         asientoContableRepository.save(asientoContable);
 
         // Opcional: Marca la factura como asentada

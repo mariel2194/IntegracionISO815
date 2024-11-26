@@ -219,11 +219,9 @@
 					</tbody>
 					
 				</table>
-				<button
-																						type="button" class="btn btn-warning" data-bs-toggle="modal"
-																						data-bs-target="#crearAsientoModal">
-																						Contabilizar
-																					</button>
+				<button type="button" class="btn btn-warning" onclick="contabilizarAsiento(${asiento.idAsiento}, '${asiento.fecha}', ${asiento.monto}, '${asiento.descripcion}', '${asiento.tipoMovimiento}')">
+				                    Contabilizar
+				                </button>
 			</div>
 		</div>
 

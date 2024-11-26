@@ -30,7 +30,6 @@ public class AsientosController {
 
     private static final Logger logger = LoggerFactory.getLogger(AsientosController.class);
 
-    // Obtener todos los asientos contables
     @GetMapping
     public String getAsientos(Model model) {
         List<AsientoContable> asientosList = asientoContableService.listAsientosContables(); 
@@ -39,17 +38,29 @@ public class AsientosController {
     }
     
     @PostMapping("/contabilizarAsiento")
-    public String contabilizarAsiento(AsientoContable asientoContable, Model model) {
+    public String contabilizarAsiento(
+                                      @RequestParam String descripcion,
+                                      @RequestParam int cuentaDB,
+                                      @RequestParam Double monto,
+                                      Model model) {
         try {
+            AsientoContable asientoContable = new AsientoContable();
+            asientoContable.setDescripcion(descripcion);
+            asientoContable.setCuentadb(cuentaDB);
+            asientoContable.setCuentacr(0);
+            asientoContable.setMonto(monto);
+
+            // Llamamos al servicio para registrar el asiento y obtener el asientoId
             AsientoContable asientoContableGuardado = asientoContableService.contabilizarAsiento(asientoContable);
+
             model.addAttribute("asientoContable", asientoContableGuardado);
-            return "asientoContableDetalle";  
+            return "asientos"; // Redirigir o mostrar la vista con el asiento contabilizado
 
         } catch (Exception e) {
             model.addAttribute("errorMessage", "No se pudo contabilizar el asiento.");
-            return "error"; 
+            return "error"; // En caso de error, redirigir a la vista de error
         }
-    }       
+    }     
     
 
     @PostMapping("/addnew")
@@ -84,17 +95,7 @@ public class AsientosController {
         return new ResponseEntity<>(asientoContable, HttpStatus.OK);
     }
 
-    // Actualizar un asiento contable
-    @PostMapping("/update")
-    public String updateAsiento(@ModelAttribute AsientoContable asientoContable) {
-        asientoContableService.updateAsientoContable(asientoContable); // Método para actualizar el asiento contable
-        return "redirect:/asientos";
-    }
+    
 
-    // Eliminar un asiento contable
-    @PostMapping("/delete/{id}")
-    public String deleteAsiento(@PathVariable("id") Integer id) {
-        asientoContableService.deleteAsientoContable(id); // Método para eliminar el asiento contable
-        return "redirect:/asientos";
-    }
+   
 }

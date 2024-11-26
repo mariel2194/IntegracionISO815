@@ -40,6 +40,26 @@ public class AsientoContable {
     @Column(name = "idAsiento", nullable = true)
     private Integer idAsiento;
 
+    @Column(name = "IdAuxiliar", nullable = false)
+    private Integer idAuxiliar=3;
+
+    @Column(name = "CuentaDB", nullable = true)
+    private Integer cuentadb;
+    
+    @Column(name = "CuentaCR", nullable = true)
+    private Integer cuentacr=0;
+
+    @Column(name = "Monto", nullable = false)
+    private double monto;
+
+    @Column(name = "tipoMovimiento", nullable = false)
+    private String tipoMovimiento;
+
+    @Column(name = "Fecha")
+    @Temporal(TemporalType.DATE)
+    private Date fecha;
+    
+
     public Integer getIdAsiento() {
         return idAsiento;
     }
@@ -48,22 +68,25 @@ public class AsientoContable {
         this.idAsiento = idAsiento;
     }
 
-    @Column(name = "IdAuxiliar", nullable = false)
-    private Integer idAuxiliar=3;
+    public Integer getCuentadb() {
+        return cuentadb;
+    }
 
-    @Column(name = "Cuenta", nullable = true)
-    private Integer cuenta;
+    public void setCuentadb(Integer cuentadb) {
+        this.cuentadb = cuentadb;
+    }
 
+    public Integer getCuentacr() {
+        return cuentacr;
+    }
 
-    @Column(name = "Monto", nullable = false)
-    private int monto;
+    public void setCuentacr(Integer cuentacr) {
+        this.cuentacr = cuentacr;
+    }
 
-    @Column(name = "tipoMovimiento", nullable = false)
-    private String tipoMovimiento;
-
-    @Column(name = "Fecha")
-    @Temporal(TemporalType.DATE)
-    private Date fecha;
+    public void setIdAuxiliar(Integer idAuxiliar) {
+        this.idAuxiliar = idAuxiliar;
+    }
    
 
     public Integer getId() {
@@ -104,19 +127,11 @@ public class AsientoContable {
     }
 
 
-    public Integer getCuenta() {
-	return cuenta;
-    }
-
-    public void setCuenta(Integer cuenta) {
-	this.cuenta= cuenta;
-    }
-
-    public int getMonto() {
+    public double getMonto() {
 	return monto;
     }
 
-    public void setMonto(int monto) {
+    public void setMonto(double monto) {
         this.monto = monto;
     }
 
