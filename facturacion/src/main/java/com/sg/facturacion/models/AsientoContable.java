@@ -64,10 +64,7 @@ public class AsientoContable {
     @Column(name = "Fecha")
     @Temporal(TemporalType.DATE)
     private Date fecha;
-    
-    public AsientoContable() {
-        this.idAuxiliar = 3;  
-    }
+   
 
     public Integer getId() {
 	return id;
