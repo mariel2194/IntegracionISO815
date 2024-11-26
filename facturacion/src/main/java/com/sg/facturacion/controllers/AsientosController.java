@@ -33,16 +33,29 @@ public class AsientosController {
     // Obtener todos los asientos contables
     @GetMapping
     public String getAsientos(Model model) {
-        List<AsientoContable> asientosList = asientoContableService.listAsientosContables(); // Método que debes implementar en el servicio
+        List<AsientoContable> asientosList = asientoContableService.listAsientosContables(); 
         model.addAttribute("asientos", asientosList);
-        return "asientos"; // Nombre de la vista
+        return "asientos"; 
     }
+    
+    @PostMapping("/contabilizarAsiento")
+    public String contabilizarAsiento(AsientoContable asientoContable, Model model) {
+        try {
+            AsientoContable asientoContableGuardado = asientoContableService.contabilizarAsiento(asientoContable);
+            model.addAttribute("asientoContable", asientoContableGuardado);
+            return "asientoContableDetalle";  
 
-    // Crear un nuevo asiento contable
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "No se pudo contabilizar el asiento.");
+            return "error"; 
+        }
+    }       
+    
+
     @PostMapping("/addnew")
     public String addNew(@ModelAttribute AsientoContable asientoContable, Model model) {
         try {
-            asientoContableService.saveNew(asientoContable); // Método para guardar el asiento contable
+            asientoContableService.saveNew(asientoContable); 
             return "redirect:/asientos";
         } catch (Exception e) {
             logger.error("Error al guardar el asiento contable", e);
