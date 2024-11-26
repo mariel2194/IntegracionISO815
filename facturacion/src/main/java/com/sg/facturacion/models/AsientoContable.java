@@ -1,5 +1,6 @@
 package com.sg.facturacion.models;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import jakarta.persistence.TemporalType;
@@ -24,104 +25,102 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class AsientoContable {
-	
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
+  
+    @Id
     @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-	
-    @Column(name = "Descripcion", nullable=false)
+
+    @Column(name = "Descripcion", nullable = false)
     private String descripcion;
     
-    @ManyToOne 
-    @JoinColumn(name = "cliente_id") 
-    private Clientes cliente;
+    @Column(name = "idAsiento", nullable = true)
+    private Integer idAsiento;
 
-    @Column(name = "Cuenta", nullable=false)
-    private String cuenta;
-    
-    @Column(name = "tipoMovimiento", nullable=false)
-    private String tipoMovimiento;
-    
-
-	@Column(name = "Fecha")
-	@Temporal(TemporalType.DATE)
-	private Date fecha;
-
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-
-	public Clientes getCliente() {
-		return cliente;
-	}
-
-
-	public void setCliente(Clientes cliente) {
-		this.cliente = cliente;
-	}
-
-
-	public String getCuenta() {
-		return cuenta;
-	}
-
-
-	public void setCuenta(String cuenta) {
-		this.cuenta = cuenta;
-	}
-
-
-	public String getTipoMovimiento() {
-		return tipoMovimiento;
-	}
-
-
-	public void setTipoMovimiento(String tipoMovimiento) {
-		this.tipoMovimiento = tipoMovimiento;
-	}
-
-
-	public Date getFecha() {
-		return fecha;
-	}
-
-
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
-	}
-    
-	
-	
-	
-    
+    public Integer getIdAsiento() {
+        return idAsiento;
     }
 
+    public void setIdAsiento(Integer idAsiento) {
+        this.idAsiento = idAsiento;
+    }
+
+    @Column(name = "IdAuxiliar", nullable = false)
+    private Integer idAuxiliar=3;
+
+    @Column(name = "Cuenta", nullable = true)
+    private Integer cuenta;
+
+
+    @Column(name = "Monto", nullable = false)
+    private int monto;
+
+    @Column(name = "tipoMovimiento", nullable = false)
+    private String tipoMovimiento;
+
+    @Column(name = "Fecha")
+    @Temporal(TemporalType.DATE)
+    private Date fecha;
     
+    public AsientoContable() {
+        this.idAuxiliar = 3;  
+    }
+
+    public Integer getId() {
+	return id;
+    }
+
+    public void setId(Integer id) {
+	this.id = id;
+    }
+
+    public String getDescripcion() {
+	return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+	this.descripcion = descripcion;
+    }
 
 
+    public String getTipoMovimiento() {
+	return tipoMovimiento;
+    }
+
+    public void setTipoMovimiento(String tipoMovimiento) {
+	this.tipoMovimiento = tipoMovimiento;
+    }
+
+    public Date getFecha() {
+	return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+	this.fecha = fecha;
+    }
+
+    public Integer getIdAuxiliar() {
+	return idAuxiliar;
+    }
 
 
+    public Integer getCuenta() {
+	return cuenta;
+    }
 
+    public void setCuenta(Integer cuenta) {
+	this.cuenta= cuenta;
+    }
 
+    public int getMonto() {
+	return monto;
+    }
 
-   
+    public void setMonto(int monto) {
+        this.monto = monto;
+    }
 
-
-   
+}

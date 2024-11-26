@@ -48,12 +48,7 @@ public class Clientes {
         
     @Column(name = "Activo")    
     private boolean activo;
-    
-   
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    private List<AsientoContable> asiento_contable;
-    
-   
+ 
     public Integer getId() {
         return cliente_id;
     }

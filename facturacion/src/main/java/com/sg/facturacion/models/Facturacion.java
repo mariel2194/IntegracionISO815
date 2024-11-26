@@ -43,8 +43,20 @@ public class Facturacion {
 	@Column(name = "Fecha")
 	@Temporal(TemporalType.DATE)
 	private Date fecha;
+	
+	@Column(name = "Asentada", nullable = false)
+	 private boolean asentada = false;
 
 	
+	public boolean getAsentada() {
+	    return asentada;
+	}
+
+	public void setAsentada(boolean asentada) {
+	    this.asentada = asentada;
+	}
+
+
 	@Column(name = "Cantidad")
 	private int cantidad;
 	
@@ -52,7 +64,7 @@ public class Facturacion {
 	private String comentario;
 	
     @Column(name = "Monto_Total")
-	private double montoTotal;
+	private int montoTotal;
 
 	@OneToOne(mappedBy = "factura", cascade = CascadeType.ALL)
 	private Devoluciones devolucion;
@@ -132,12 +144,12 @@ public class Facturacion {
 	}
 
 
-	public double getMontoTotal() {
+	public int getMontoTotal() {
 		return montoTotal;
 	}
 
 
-	public void setMontoTotal(double montoTotal) {
+	public void setMontoTotal(int montoTotal) {
 		this.montoTotal = montoTotal;
 	}
 

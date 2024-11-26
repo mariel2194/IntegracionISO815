@@ -228,6 +228,9 @@
 										data-bs-toggle="modal" data-bs-target="#editFacturasModal">
 										<i class="bi bi-pencil-square"></i>
 									</button>
+									<form th:action="@{/facturacion/asentar/{id}(id=${factura.id})}" method="post">
+									    <button type="submit" th:disabled="${factura.asentada}">Asentar</button>
+									</form>
 									<form th:action="@{/facturacion/delete/{id}(id=${factura.id})}" method="post"
 										style="display:inline;">
 										<button type="submit" class="btn">
