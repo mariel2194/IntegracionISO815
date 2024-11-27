@@ -211,7 +211,7 @@
 						<tr th:each="asiento:${asientos}">
 							<td th:text="${asiento.IdAsiento !=null? asiento.IdAsiento : ''}"></td>
 							<td th:text="${asiento.fecha}"></td>
-							<td th:text="${asiento.cuenta}"></td>
+							<td th:text="${asiento.cuentadb}"></td>
 							<td th:text="${asiento.descripcion}"></td>
 							<td th:text="${asiento.tipoMovimiento}"></td>
 							</td>
