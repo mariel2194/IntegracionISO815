@@ -44,7 +44,7 @@ public class AsientoContable {
     private Integer cuentadb;
     
     @Column(name = "CuentaCR", nullable = true)
-    private Integer cuentacr=0;
+    private Integer cuentacr = 0;
 
     @Column(name = "Monto", nullable = false)
     private double monto;

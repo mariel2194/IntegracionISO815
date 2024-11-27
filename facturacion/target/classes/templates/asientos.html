@@ -205,6 +205,7 @@
 							<th>Monto</th>
 							<th>Descripcion</th>
 							<th>Tipo de Movimiento</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -215,13 +216,17 @@
 							<td th:text="${asiento.descripcion}"></td>
 							<td th:text="${asiento.tipoMovimiento}"></td>
 							</td>
+							<td>							<form th:action="@{/asientos/contabilizar}" method="post">
+							                   <input type="hidden" name="asientoId" th:value="${asiento.id}" />
+							                   <button type="submit" class="btn btn-warning">Contabilizar</button>
+							               </form>
+							 
+							 </td>
 						</tr>
 					</tbody>
 					
 				</table>
-				<button type="button" class="btn btn-warning" onclick="contabilizarAsiento(${asiento.idAsiento}, '${asiento.fecha}', ${asiento.monto}, '${asiento.descripcion}', '${asiento.tipoMovimiento}')">
-				                    Contabilizar
-				                </button>
+			
 			</div>
 		</div>
 

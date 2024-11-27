@@ -1,6 +1,7 @@
 package com.sg.facturacion.controllers;
 
 import com.sg.facturacion.models.AsientoContable;
+import com.sg.facturacion.repositories.AsientoContableRepository;
 import com.sg.facturacion.services.*;
 import com.sg.facturacion.services.AsientoContableService;
 import com.sg.facturacion.services.ClienteService;
@@ -24,6 +25,9 @@ public class AsientosController {
 
     @Autowired
     private AsientoContableService asientoContableService; 
+    
+    @Autowired
+    private AsientoContableRepository asientoContableRepository; 
 
     @Autowired
     private ClienteService clienteService; 
@@ -37,30 +41,22 @@ public class AsientosController {
         return "asientos"; 
     }
     
-    @PostMapping("/contabilizarAsiento")
-    public String contabilizarAsiento(
-                                      @RequestParam String descripcion,
-                                      @RequestParam int cuentaDB,
-                                      @RequestParam Double monto,
-                                      Model model) {
+    @PostMapping("/contabilizar")
+    @ResponseBody
+    public ResponseEntity<String> contabilizarAsiento(@RequestParam int id) {
         try {
-            AsientoContable asientoContable = new AsientoContable();
-            asientoContable.setDescripcion(descripcion);
-            asientoContable.setCuentadb(cuentaDB);
-            asientoContable.setCuentacr(0);
-            asientoContable.setMonto(monto);
+            // Buscar y contabilizar el asiento mediante el servicio
+            AsientoContable asiento = asientoContableRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Asiento no encontrado."));
 
-            // Llamamos al servicio para registrar el asiento y obtener el asientoId
-            AsientoContable asientoContableGuardado = asientoContableService.contabilizarAsiento(asientoContable);
-
-            model.addAttribute("asientoContable", asientoContableGuardado);
-            return "asientos"; // Redirigir o mostrar la vista con el asiento contabilizado
+            asientoContableService.contabilizarAsiento(asiento);
+            return ResponseEntity.ok("Asiento contabilizado exitosamente con ID SOAP: " + asiento.getIdAsiento());
 
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "No se pudo contabilizar el asiento.");
-            return "error"; // En caso de error, redirigir a la vista de error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al contabilizar el asiento: " + e.getMessage());
         }
-    }     
+    }
     
 
     @PostMapping("/addnew")

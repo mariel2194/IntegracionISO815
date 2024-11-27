@@ -52,7 +52,7 @@ public class FacturacionService {
     public void asentarFactura(Facturacion factura) {
         AsientoContable asientoContable = new AsientoContable();
 
-        asientoContable.setDescripcion("Asiento generado para la factura #" + factura.getId());
+        asientoContable.setDescripcion("Facturacion- Asiento generado para la factura de venta #" + factura.getId());
         asientoContable.setMonto(factura.getMontoTotal());
         asientoContable.setCuentadb((int)factura.getMontoTotal());         
         asientoContable.setTipoMovimiento("DEBITO"); 
