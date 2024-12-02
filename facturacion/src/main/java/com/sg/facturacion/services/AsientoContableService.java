@@ -1,13 +1,15 @@
 package com.sg.facturacion.services;
 
 import java.util.List;
+import com.sg.facturacion.asientosws.WebServiceConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ws.client.core.WebServiceTemplate;
 
-import com.sg.facturacion.asientosws.AsientoContableSoapClient;
+import com.sg.facturacion.asientosws.AsientoContableServiceClient;
 import com.sg.facturacion.models.AsientoContable;
 import com.sg.facturacion.repositories.AsientoContableRepository;
 @Service
@@ -15,9 +17,10 @@ public class AsientoContableService {
 
     @Autowired
     private AsientoContableRepository asientoContableRepository;
-
+    
     @Autowired
-    private AsientoContableSoapClient asientoContableSoapClient;
+    private WebServiceTemplate webServiceTemplate;
+
 
     private static final Logger logger = LoggerFactory.getLogger(AsientoContableService.class);
 
@@ -32,15 +35,8 @@ public class AsientoContableService {
     // Método para contabilizar un asiento contable
     public AsientoContable contabilizarAsiento(AsientoContable asientoContable) {
         try {
-            Integer asientoId = asientoContableSoapClient.registrarAsiento(asientoContable);
+            String respuesta = (String)  webServiceTemplate.marshalSendAndReceive(asientoContable);
 
-            if (asientoId != null) {
-                asientoContable.setIdAsiento(asientoId); 
-                asientoContableRepository.save(asientoContable);
-            } else {
-                logger.error("El servicio SOAP no devolvió un ID válido.");
-                throw new RuntimeException("Error al registrar el asiento contable. El servicio SOAP no devolvió un ID válido.");
-            }
         } catch (Exception e) {
             logger.error("Error al contactar con el servicio SOAP", e);
             throw new RuntimeException("Error al registrar el asiento contable a través del servicio SOAP.");

@@ -63,7 +63,7 @@ public class Facturacion {
 	@Column(name = "Comentario", nullable = false)
 	private String comentario;
 	
-    @Column(name = "Monto_Total")
+        @Column(name = "Monto_Total")
 	private double montoTotal;
 
 	@OneToOne(mappedBy = "factura", cascade = CascadeType.ALL)

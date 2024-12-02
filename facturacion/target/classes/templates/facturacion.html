@@ -186,8 +186,8 @@
 
 						<nav>
 							<ol class="breadcrumb">
-								<li class="breadcrumb-item"><a href="index.html">Volver al Inicio</a></li>
-								<button style="margin-left: 60em; display: inline-block; position: absolute; top: 20px;"
+								<li class="breadcrumb-item"><a href="/index">Volver al Inicio</a></li>
+								<button style="margin-left: 70em; display: inline-block; position: absolute; top: 20px;"
 									type="button" class="btn btn-warning" data-bs-toggle="modal"
 									data-bs-target="#crearFacturaModal">
 									Nueva Factura
@@ -256,23 +256,23 @@
 				</div>
 				<div class="modal-body">
 					<form id="facturasForm" th:action="@{/facturacion/update}" method="post" th:object="${facturacion}">
-						<input type="hidden" id="facturaId" name="id">
+						<input type="hidden" id="id" name="id" th:value="${factura?.id}">
 						<div class="form-group">
 							<label for="nombre">Fecha:</label>
-							<input type="date" class="form-control" id="descripcion" name="descripcion"
+							<input type="date" class="form-control" id="fecha" name="fecha"
 								th:value="${factura?.fecha}">
 						</div>
 						<div class="form-group">
 							<label for="nombre">Articulo:</label>
 							<select class="form-control" id="articulo" name="articulo.id">
-								<option th:each="articulo : ${articulos}" th:value="${articulo.id}" th:text="${articulo.descripcion}">
+								<option th:each="articulo : ${articulos}" th:value="${articulo.id}" th:text="${articulo.descripcion}" th:data-precio="${articulo.precio_unitario}">
 							    </option>
 							</select>
 							</div>
 							<div class="form-group">
 						  	<label for="nombre">Cantidad:</label>
-							<input type="text" class="form-control" id="descripcion" name="descripcion"
-							th:value="${factura?.descripcion}">
+							<input type="text" class="form-control" id="cantidad" name="cantidad"
+							th:value="${factura?.cantidad}">
 														</div>
 							<div class="form-group">
 							  <label for="nombre">Vendedor:</label>
@@ -289,15 +289,16 @@
 						   	</select>
 						</div>							
 						<div class="form-group">
-							<label for="nombre">Monto:</label>
-							<input type="text" class="form-control" id="descripcion" name="descripcion"
-											th:value="${factura?.descripcion}">
-											</div>
-											<div class="form-group">
-																<label for="nombre">Comentario:</label>
-																<input type="text" class="form-control" id="descripcion" name="descripcion"
-																th:value="${factura?.descripcion}">
-																</div>
+							<label for="monto">Monto:</label>
+							<input type="text" class="form-control" id="montoTotal" name="montoTotal"
+							th:value="${factura?.montoTotal}" readonly>
+							
+						</div>
+						<div class="form-group">
+							<label for="comentario">Comentario:</label>
+							<input type="text" class="form-control" id="comentario" name="comentario"
+							th:value="${factura?.comentario}">
+						</div>
 																
 
 						<div class="modal-footer">
@@ -324,21 +325,21 @@
 				<div class="modal-body">
 					<form th:action="@{/facturacion/addnew}" method="post" th:object="${facturacion}">
 						<div class="form-group">
-													<label for="nombre">Fecha:</label>
-													<input type="date" class="form-control" id="descripcion" name="descripcion"
-														th:value="${factura?.fecha}">
-												</div>
+						<label for="nombre">Fecha:</label>
+						<input type="date" class="form-control" id="fecha" name="fecha"
+						th:value="${factura?.fecha}">
+						</div>
 												<div class="form-group">
-													<label for="nombre">Articulo:</label>
+													<label for="articulo">Articulo:</label>
 													<select class="form-control" id="articulo" name="articulo.id">
-														<option th:each="articulo : ${articulos}" th:value="${articulo.id}" th:text="${articulo.descripcion}">
+														<option th:each="articulo : ${articulos}" th:value="${articulo.id}" th:text="${articulo.descripcion}" th:data-precio="${articulo.precio_unitario}">
 													    </option>
 														</select>
 													</div>
 													<div class="form-group">
 												  	<label for="nombre">Cantidad:</label>
-													<input type="text" class="form-control" id="descripcion" name="descripcion"
-													th:value="${factura?.descripcion}">
+													<input type="text" class="form-control" id="cantidad" name="cantidad"
+													th:value="${factura?.cantidad}">
 																				</div>
 												<div class="form-group">
 												  <label for="nombre">Vendedor:</label>
@@ -349,22 +350,22 @@
 												</div>
 												
 												<div class="form-group">
-																		   <label for="nombre">Cliente:</label>
-																		   <select class="form-control" id="cliente" name="cliente.id">
-																		   		<option th:each="cliente : ${clientes}" th:value="${cliente.id}" th:text="${cliente.nombre}">
-																		   	    </option>
-																		   	</select>
-																		</div>	
+												   <label for="nombre">Cliente:</label>
+												   <select class="form-control" id="cliente" name="cliente.id">
+													<option th:each="cliente : ${clientes}" th:value="${cliente.id}" th:text="${cliente.nombre}">
+												  	    </option>
+												   	</select>
+												</div>	
 												
 																		
 												<div class="form-group">
 													<label for="nombre">Monto:</label>
 													<input type="text" class="form-control" id="monto" name="monto"
-													th:value="${factura?.monto}">
+													th:value="${factura?.monto}" readonly>
 												</div>
 												<div class="form-group">
 													<label for="nombre">Comentario:</label>
-													<input type="text" class="form-control" id="monto" name="monto"
+													<input type="text" class="form-control" id="comentario" name="comentario"
 													th:value="${factura?.comentario}">
 												</div>	
 												<br>					
@@ -395,22 +396,81 @@
 	<script src="assets/vendor/tinymce/tinymce.min.js"></script>
 	<script src="assets/vendor/php-email-form/validate.js"></script>
 
-	<!-- Template Main JS File -->
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
-			document.querySelectorAll('.editButton').forEach(button => {
-				button.addEventListener('click', function () {
-					const facturaId = this.getAttribute('data-id');
-					const row = this.closest('tr');
-					const descripcion = row.children[0].innerText;
-					const activo = row.children[2].innerText === 'Sí';
-					document.getElementById('facturaId').value = facturaId;
-					document.getElementById('descripcion').value = descripcion;
+		    document.querySelectorAll('.editButton').forEach(button => {
+		        button.addEventListener('click', function () {
+		            const facturaId = this.getAttribute('data-id');
+		            const row = this.closest('tr');
 
-				});
-			});
+		            const fecha = row.children[1].innerText;
+		            const articulo = row.children[2].getAttribute('data-id');
+		            const cantidad = row.children[3].innerText;
+		            const vendedor = row.children[4].getAttribute('data-id');
+		            const cliente = row.children[5].getAttribute('data-id');
+		            const monto = row.children[6].innerText;
+		            const comentario = row.children[7].innerText;
+
+		            document.getElementById('id').value = facturaId; 
+		            document.getElementById('fecha').value = fecha;
+		            document.getElementById('cantidad').value = cantidad;
+		            document.getElementById('montoTotal').value = monto;
+		            document.getElementById('comentario').value = comentario;
+
+		            const articuloSelect = document.getElementById('articulo');
+		            const articuloOption = Array.from(articuloSelect.options).find(option => option.value === articulo);
+		            if (articuloOption) {
+		                articuloOption.selected = true;
+		            }
+
+		            const vendedorSelect = document.getElementById('vendedor');
+		            const vendedorOption = Array.from(vendedorSelect.options).find(option => option.value === vendedor);
+		            if (vendedorOption) {
+		                vendedorOption.selected = true;
+		            }
+
+		            const clienteSelect = document.getElementById('cliente');
+		            const clienteOption = Array.from(clienteSelect.options).find(option => option.value === cliente);
+		            if (clienteOption) {
+		                clienteOption.selected = true;
+		            }
+		        });
+		    });
 		});
+		
+		document.addEventListener('DOMContentLoaded', function () {
+		    // Declare DOM elements
+		    const articuloSelect = document.getElementById('articulo');
+		    const cantidadInput = document.getElementById('cantidad');
+		    const montoInput = document.getElementById('montoTotal');
+
+		    // Function to calculate the total amount
+		    function calculateMonto() {
+		        if (!articuloSelect || !cantidadInput || !montoInput) {
+		            console.error("Required DOM elements not found.");
+		            return;
+		        }
+
+		        const selectedOption = articuloSelect.options[articuloSelect.selectedIndex];
+		        const precioUnitario = parseFloat(selectedOption.getAttribute('data-precio')) || 0;
+		        const cantidad = parseFloat(cantidadInput.value) || 0;
+		        const montoTotal = precioUnitario * cantidad;
+
+		        montoInput.value = montoTotal.toFixed(2); // Set monto to two decimal places
+		    }
+
+		    // Attach event listeners
+		    if (articuloSelect && cantidadInput) {
+		        articuloSelect.addEventListener('change', calculateMonto);
+		        cantidadInput.addEventListener('input', calculateMonto);
+		    }
+		});
+
+		
+		   
+		
 	</script>
+
 
 </body>
 

@@ -87,8 +87,6 @@ public class FacturacionController {
             logger.error("Error al guardar la facturación", e);
             model.addAttribute("errorMessage", "Error al guardar la facturación: " + e.getMessage());
             model.addAttribute("facturacion", facturacion);
-
-            // Reagregar listas en caso de error para mantenerlas en la vista
             model.addAttribute("clientes", clienteService.listClientes());
             model.addAttribute("vendedores", vendedorService.listVendedores());
             model.addAttribute("articulos", articuloService.listArticulos());

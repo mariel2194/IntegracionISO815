@@ -2,6 +2,10 @@ package com.sg.facturacion.models;
 
 import java.util.Date;
 import jakarta.persistence.TemporalType;
+import jakarta.xml.bind.annotation.XmlAnyElement;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -23,6 +27,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@XmlRootElement(name = "AsientoContable")  // Asegura que la clase sea reconocida como un root element de JAXB
+@XmlType(propOrder = {"descripcion", "cuentadb", "cuentacr", "monto"})  // Especifica el orden de los campos en el XML
+
 public class AsientoContable {
     
   
@@ -30,7 +37,8 @@ public class AsientoContable {
     @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    
+    @XmlElement  // Anotación JAXB para que este campo sea mapeado
     @Column(name = "Descripcion", nullable = false)
     private String descripcion;
     
@@ -39,15 +47,19 @@ public class AsientoContable {
 
     @Column(name = "IdAuxiliar", nullable = false)
     private Integer idAuxiliar=3;
+    @XmlElement  // Anotación JAXB para que este campo sea mapeado
 
     @Column(name = "CuentaDB", nullable = true)
     private Integer cuentadb;
+    @XmlElement  // Anotación JAXB para que este campo sea mapeado
+
     
     @Column(name = "CuentaCR", nullable = true)
     private Integer cuentacr = 0;
 
     @Column(name = "Monto", nullable = false)
     private double monto;
+    @XmlElement  // Anotación JAXB para que este campo sea mapeado
 
     @Column(name = "tipoMovimiento", nullable = false)
     private String tipoMovimiento;

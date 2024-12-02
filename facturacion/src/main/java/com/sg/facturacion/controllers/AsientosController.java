@@ -1,5 +1,6 @@
 package com.sg.facturacion.controllers;
 
+import com.sg.facturacion.asientosws.AsientoContableServiceClient;
 import com.sg.facturacion.models.AsientoContable;
 import com.sg.facturacion.repositories.AsientoContableRepository;
 import com.sg.facturacion.services.*;
@@ -27,10 +28,10 @@ public class AsientosController {
     private AsientoContableService asientoContableService; 
     
     @Autowired
-    private AsientoContableRepository asientoContableRepository; 
-
+    private AsientoContableServiceClient client;
+    
     @Autowired
-    private ClienteService clienteService; 
+    private AsientoContableRepository asientoContableRepository; // 
 
     private static final Logger logger = LoggerFactory.getLogger(AsientosController.class);
 
@@ -41,36 +42,19 @@ public class AsientosController {
         return "asientos"; 
     }
     
-    @PostMapping("/contabilizar")
-    @ResponseBody
-    public ResponseEntity<String> contabilizarAsiento(@RequestParam int id) {
-        try {
-            // Buscar y contabilizar el asiento mediante el servicio
-            AsientoContable asiento = asientoContableRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Asiento no encontrado."));
+    @PostMapping("/asientos/contabilizar")
+    public String contabilizar(@RequestParam("id") Integer id) {
+        // Fetch the AsientoContable from the database by its ID
+        AsientoContable asiento = asientoContableRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid AsientoContable ID"));
 
-            asientoContableService.contabilizarAsiento(asiento);
-            return ResponseEntity.ok("Asiento contabilizado exitosamente con ID SOAP: " + asiento.getIdAsiento());
+        // Send the data to the SOAP service
 
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al contabilizar el asiento: " + e.getMessage());
-        }
+        // Redirect back to the page or return the appropriate response
+        return "redirect:/asientos"; // Adjust as per your page structure
     }
-    
+  
 
-    @PostMapping("/addnew")
-    public String addNew(@ModelAttribute AsientoContable asientoContable, Model model) {
-        try {
-            asientoContableService.saveNew(asientoContable); 
-            return "redirect:/asientos";
-        } catch (Exception e) {
-            logger.error("Error al guardar el asiento contable", e);
-            model.addAttribute("errorMessage", "Error al guardar el asiento contable: " + e.getMessage());
-            model.addAttribute("asiento", asientoContable);
-            return "crearAsiento"; // Nombre de la vista para crear un nuevo asiento
-        }
-    }
 
     // Manejar excepciones
     @ExceptionHandler(Exception.class)

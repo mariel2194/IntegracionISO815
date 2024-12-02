@@ -217,7 +217,7 @@
 							<td th:text="${asiento.tipoMovimiento}"></td>
 							</td>
 							<td>							<form th:action="@{/asientos/contabilizar}" method="post">
-							                   <input type="hidden" name="asientoId" th:value="${asiento.id}" />
+							                   <input type="hidden" name="id" th:value="${asiento.id}" />
 							                   <button type="submit" class="btn btn-warning">Contabilizar</button>
 							               </form>
 							 

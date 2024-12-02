@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class)
 public class Articulos {
 	
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private Integer id;
@@ -42,7 +42,7 @@ public class Articulos {
 		this.cantidad = cantidad;
 	}
 
-	@Column(name = "Precio_Unitario")
+    @Column(name = "Precio_Unitario")
     private double precio_unitario;  
     
     @Column(name = "Activo")    
