@@ -3,10 +3,18 @@ package com.sg.facturacion.controllers;
 import com.sg.facturacion.asientosws.AsientoContableServiceClient;
 import com.sg.facturacion.models.AsientoContable;
 import com.sg.facturacion.repositories.AsientoContableRepository;
-import com.sg.facturacion.services.*;
+import com.sg.facturacion.repositories.FacturacionRepository;
 import com.sg.facturacion.services.AsientoContableService;
-import com.sg.facturacion.services.ClienteService;
+import com.sg.facturacion.services.FacturacionService;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.soap.*;
+import com.sg.facturacion.models.Facturacion;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +24,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +32,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,10 +44,14 @@ public class AsientosController {
     private AsientoContableService asientoContableService; 
     
     @Autowired
-    private AsientoContableServiceClient client;
+    private AsientoContableRepository asientoContableRepository; 
     
     @Autowired
-    private AsientoContableRepository asientoContableRepository; // 
+    private FacturacionRepository facturacionRepository;
+    
+    @Autowired
+    private FacturacionService facturacionService;
+  
 
     private static final Logger logger = LoggerFactory.getLogger(AsientosController.class);
 
@@ -52,28 +64,33 @@ public class AsientosController {
     
     @PostMapping("/contabilizar/{id}")
     public String contabilizar(@RequestParam("id") Integer id, Model model) {
-        // Buscar el asiento contable por ID
         AsientoContable asiento = asientoContableRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Asiento Contable no encontrado con ID: " + id));
 
-        // Construir el XML para la solicitud SOAP
+        // Build the SOAP request
         String soapRequest = buildSoapRequest(asiento);
-
-        // Enviar el XML al servicio SOAP
         String soapEndpoint = "http://asientocontablews.somee.com/AsientoContableService.asmx";
+
         try {
-            sendSoapRequest(soapEndpoint, soapRequest);
-            model.addAttribute("successMessage", "El asiento contable fue contabilizado exitosamente.");
-        } catch (IOException e) {
+            String soapResponse = sendSoapRequest(soapEndpoint, soapRequest);
+            Integer registrarAsientoResult = extractRegistrarAsientoResult(soapResponse);
+
+            if (registrarAsientoResult != null) {
+                asiento.setIdAsiento(registrarAsientoResult);
+                asientoContableRepository.save(asiento);
+                model.addAttribute("successMessage", "La transacción fue contabilizada exitosamente.");
+            } else {
+                throw new IllegalArgumentException("No se pudo obtener el resultado del SOAP.");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("errorMessage", "Hubo un error al contabilizar el asiento: " + e.getMessage());
         }
 
-        // Redirigir o renderizar la vista actualizando los mensajes de éxito o error
-        return "redirect:/asientos"; // Ajusta esta ruta según tu estructura de vistas
+        return "redirect:/asientos";
     }
-
-    // Método para construir el XML
+    
+ // Método para construir el XML
     private String buildSoapRequest(AsientoContable asiento) {
         return """
             <?xml version="1.0" encoding="utf-8"?>
@@ -98,8 +115,8 @@ public class AsientosController {
                 asiento.getMonto()
             );
     }
-
-    // Método para enviar la solicitud SOAP
+    
+    
     private String sendSoapRequest(String endpointUrl, String soapRequest) throws IOException {
         URL url = new URL(endpointUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -110,8 +127,7 @@ public class AsientosController {
         try (OutputStream os = connection.getOutputStream()) {
             byte[] input = soapRequest.getBytes("UTF-8");
             os.write(input, 0, input.length);
-        }
-             
+        }           
         
 
         int responseCode = connection.getResponseCode();
@@ -125,48 +141,55 @@ public class AsientosController {
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
-            return response.toString(); // Devuelve la respuesta del servicio SOAP
+            System.out.println(response.toString());
+            return response.toString(); 
         }
         
     }
-    
-    private String extractIdAsientoFromResponse(String response) {
-	    // Aquí puedes usar una librería de parsing XML como JAXB o cualquier otro método para extraer el valor
-	    // A continuación, te muestro un ejemplo usando expresiones regulares para obtener el valor entre las etiquetas <IdAsiento>
+       
+    private Integer extractRegistrarAsientoResult(String response) {
+        // Use regex to parse the response and extract <RegistrarAsientoResult>
+        Pattern pattern = Pattern.compile("<RegistrarAsientoResult>(\\d+)</RegistrarAsientoResult>");
+        Matcher matcher = pattern.matcher(response);
 
-	    String idAsiento = null;
-	    Pattern pattern = Pattern.compile("<IdAsiento>(.*?)</IdAsiento>");
-	    Matcher matcher = pattern.matcher(response);
-	    if (matcher.find()) {
-	        idAsiento = matcher.group(1); // Obtener el valor dentro de las etiquetas
-	    }
-	    return idAsiento;
-	}
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
+        }
 
-
-  
+        return null;
+    }
 
 
-    // Manejar excepciones
     @ExceptionHandler(Exception.class)
     public String handleException(Exception e, Model model) {
         logger.error("Error en el sistema", e);
         model.addAttribute("errorMessage", "Error en el sistema: " + e.getMessage());
-        return "error"; // Nombre de la vista para mostrar el error
+        return "error"; 
     }
 
-    // Obtener el formulario de edición para un asiento contable
     @GetMapping("/edit/{id}")
     @ResponseBody
     public ResponseEntity<AsientoContable> getEditAsientoForm(@PathVariable("id") Integer id) {
-        AsientoContable asientoContable = asientoContableService.getAsientoContableById(id); // Método para obtener un asiento por ID
+        AsientoContable asientoContable = asientoContableService.getAsientoContableById(id); 
         if (asientoContable == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(asientoContable, HttpStatus.OK);
     }
 
-    
+    @PostMapping("/delete/{id}")
+    public String deleteAsientos(@PathVariable("id") Integer id) {
+        asientoContableService.deleteAsientoContable(id);
+        Facturacion factura = facturacionService.getFacturacionById(id);
+        if (factura != null) {
+            factura.setAsentada(false); 
+            facturacionRepository.save(factura);
+        }
+
+        
+        return "redirect:/asientos";
+    }
+
 
    
 }

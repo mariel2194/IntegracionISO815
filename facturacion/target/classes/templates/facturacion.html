@@ -312,71 +312,70 @@
 	</div>
 
 
+	<div class="modal fade" id="crearFacturaModal" tabindex="-1" aria-labelledby="crearFacturasLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="crearFacturasLabel">Crear Factura</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="facturasForm" th:action="@{/facturacion/addnew}" method="post" th:object="${facturacion}">
+							<input type="hidden" id="id" name="id" th:value="${factura?.id}">
+							<div class="form-group">
+								<label for="nombre">Fecha:</label>
+								<input type="date" class="form-control" id="fecha" name="fecha"
+									th:value="${factura?.fecha}">
+							</div>
+							<div class="form-group">
+								<label for="nombre">Articulo:</label>
+								<select class="form-control" id="articulo" name="articulo.id">
+									<option th:each="articulo : ${articulos}" th:value="${articulo.id}" th:text="${articulo.descripcion}" th:data-precio="${articulo.precio_unitario}">
+								    </option>
+								</select>
+								</div>
+								<div class="form-group">
+							  	<label for="nombre">Cantidad:</label>
+								<input type="text" class="form-control" id="cantidad" name="cantidad"
+								th:value="${factura?.cantidad}">
+															</div>
+								<div class="form-group">
+								  <label for="nombre">Vendedor:</label>
+									   <select class="form-control" id="vendedor" name="vendedor.id">
+								   		<option th:each="vendedor : ${vendedores}" th:value="${vendedor.id}" th:text="${vendedor.nombre}">
+								   	    </option>
+									   	</select>
+								</div>
+							<div class="form-group">
+							   <label for="nombre">Cliente:</label>
+							   <select class="form-control" id="cliente" name="cliente.id">
+							   		<option th:each="cliente : ${clientes}" th:value="${cliente.id}" th:text="${cliente.nombre}">
+							   	    </option>
+							   	</select>
+							</div>							
+							<div class="form-group">
+								<label for="monto">Monto:</label>
+								<input type="text" class="form-control" id="montoTotal" name="montoTotal"
+								th:value="${factura?.montoTotal}" readonly>
+								
+							</div>
+							<div class="form-group">
+								<label for="comentario">Comentario:</label>
+								<input type="text" class="form-control" id="comentario" name="comentario"
+								th:value="${factura?.comentario}">
+							</div>
+																	
 
-	<!-- Modal para Crear Facturas -->
-	<div class="modal fade" id="crearFacturaModal" tabindex="-1" aria-labelledby="crearFacturasLabel"
-		aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="crearFacturasLabel">Crear Factura</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<form th:action="@{/facturacion/addnew}" method="post" th:object="${facturacion}">
-						<div class="form-group">
-						<label for="nombre">Fecha:</label>
-						<input type="date" class="form-control" id="fecha" name="fecha"
-						th:value="${factura?.fecha}">
-						</div>
-												<div class="form-group">
-													<label for="articulo">Articulo:</label>
-													<select class="form-control" id="articulo" name="articulo.id">
-														<option th:each="articulo : ${articulos}" th:value="${articulo.id}" th:text="${articulo.descripcion}" th:data-precio="${articulo.precio_unitario}">
-													    </option>
-														</select>
-													</div>
-													<div class="form-group">
-												  	<label for="nombre">Cantidad:</label>
-													<input type="text" class="form-control" id="cantidad" name="cantidad"
-													th:value="${factura?.cantidad}">
-																				</div>
-												<div class="form-group">
-												  <label for="nombre">Vendedor:</label>
-												   <select class="form-control" id="vendedor" name="vendedor.id">
-												 <option th:each="vendedor : ${vendedores}" th:value="${vendedor.id}" th:text="${vendedor.nombre}">
-												  	    </option>
-												   	</select>
-												</div>
-												
-												<div class="form-group">
-												   <label for="nombre">Cliente:</label>
-												   <select class="form-control" id="cliente" name="cliente.id">
-													<option th:each="cliente : ${clientes}" th:value="${cliente.id}" th:text="${cliente.nombre}">
-												  	    </option>
-												   	</select>
-												</div>	
-												
-																		
-												<div class="form-group">
-													<label for="nombre">Monto:</label>
-													<input type="text" class="form-control" id="monto" name="monto"
-													th:value="${factura?.monto}" readonly>
-												</div>
-												<div class="form-group">
-													<label for="nombre">Comentario:</label>
-													<input type="text" class="form-control" id="comentario" name="comentario"
-													th:value="${factura?.comentario}">
-												</div>	
-												<br>					
-						
-						<button type="submit" class="btn btn-primary">Guardar</button>
-						<br>
-					</form>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+								<button type="submit" class="btn btn-primary">Guardar cambios</button>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+
 
 	<!-- ======= Footer ======= -->
 	<footer id="footer" class="footer">
@@ -439,35 +438,49 @@
 		});
 		
 		document.addEventListener('DOMContentLoaded', function () {
-		    // Declare DOM elements
-		    const articuloSelect = document.getElementById('articulo');
-		    const cantidadInput = document.getElementById('cantidad');
-		    const montoInput = document.getElementById('montoTotal');
-
 		    // Function to calculate the total amount
-		    function calculateMonto() {
+		    function calculateMonto(articuloSelect, cantidadInput, montoInput) {
 		        if (!articuloSelect || !cantidadInput || !montoInput) {
 		            console.error("Required DOM elements not found.");
 		            return;
 		        }
 
 		        const selectedOption = articuloSelect.options[articuloSelect.selectedIndex];
-		        const precioUnitario = parseFloat(selectedOption.getAttribute('data-precio')) || 0;
+		        const precioUnitario = parseFloat(selectedOption?.getAttribute('data-precio')) || 0;
 		        const cantidad = parseFloat(cantidadInput.value) || 0;
 		        const montoTotal = precioUnitario * cantidad;
 
 		        montoInput.value = montoTotal.toFixed(2); // Set monto to two decimal places
 		    }
 
-		    // Attach event listeners
-		    if (articuloSelect && cantidadInput) {
-		        articuloSelect.addEventListener('change', calculateMonto);
-		        cantidadInput.addEventListener('input', calculateMonto);
-		    }
-		});
+		    // Attach event listeners to each modal
+		    function attachEventListeners(modalId) {
+		        const modal = document.getElementById(modalId);
+		        if (!modal) {
+		            console.error(`Modal with ID '${modalId}' not found.`);
+		            return;
+		        }
 
-		
-		   
+		        const articuloSelect = modal.querySelector('#articulo');
+		        const cantidadInput = modal.querySelector('#cantidad');
+		        const montoInput = modal.querySelector('#montoTotal');
+
+		        if (articuloSelect && cantidadInput) {
+		            articuloSelect.addEventListener('change', function () {
+		                calculateMonto(articuloSelect, cantidadInput, montoInput);
+		            });
+
+		            cantidadInput.addEventListener('input', function () {
+		                calculateMonto(articuloSelect, cantidadInput, montoInput);
+		            });
+		        }
+		    }
+
+		    // Attach listeners to both modals
+		    attachEventListeners('crearFacturaModal');
+		    attachEventListeners('editFacturasModal');
+		});
+   
 		
 	</script>
 
