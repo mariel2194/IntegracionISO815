@@ -218,9 +218,14 @@
 							</td>
 							<td>							<form th:action="@{/asientos/contabilizar/{id}(id=${asiento.id})}" method="post">
 							    <input type="hidden" name="id" th:value="${asiento.id}" />
-							    <button type="submit" class="btn btn-warning">Contabilizar</button>
-							</form> 							<div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-							<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div> </td>
+							    <button type="submit" class="btn"><i class="bi bi-journals"></i></button>
+							</form> 								<form th:action="@{/asientos/delete/{id}(id=${asiento.id})}" method="post"
+																								style="display:inline;">
+																								<button type="submit" class="btn">
+																									<i class="bi bi-trash"></i>
+																								</button>
+																							</form>						 </td>
+							
 						</tr>
 					</tbody>
 					

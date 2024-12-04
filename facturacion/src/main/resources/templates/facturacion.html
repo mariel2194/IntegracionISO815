@@ -187,7 +187,7 @@
 						<nav>
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="/index">Volver al Inicio</a></li>
-								<button style="margin-left: 70em; display: inline-block; position: absolute; top: 20px;"
+								<button style="margin-left: 50em; display: inline-block; position: absolute; top: 20px;"
 									type="button" class="btn btn-warning" data-bs-toggle="modal"
 									data-bs-target="#crearFacturaModal">
 									Nueva Factura
@@ -229,7 +229,7 @@
 										<i class="bi bi-pencil-square"></i>
 									</button>
 									<form th:action="@{/facturacion/asentar/{id}(id=${factura.id})}" method="post">
-									    <button type="submit" th:disabled="${factura.asentada}">Asentar</button>
+									    <button type="submit" th:disabled="${factura.asentada}"><i class="bi bi-cash-coin"></i></button>
 									</form>
 									<form th:action="@{/facturacion/delete/{id}(id=${factura.id})}" method="post"
 										style="display:inline;">
